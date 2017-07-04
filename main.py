@@ -63,30 +63,50 @@ lexer = lex.lex(debug=1)
 ## Parser part
 
 def p_P(p):
-    ''' P : D F
-          | F
+    ''' P : ID EQ INTEGER SEMI P
+          | I
     '''
-    p[0] = p[2]
+    print(p.slice)
+    if len(p) == 6:
+        p[0] = p[5]
+    else:
+        p[0] = p[1]
 
+def p_I(p):
+    ''' I : D I
+          | D
+    '''
+    if len(p) == 3:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
+    print(p.slice)
+    
 def p_D(p):
-    ''' D : ID EQ INTEGER SEMI D
-          | ID EQ INTEGER SEMI
+    ''' D : DEF ID LPAREN ARGS RPAREN EQ E SEMI
     '''
-
-def p_F(p):
-    ''' F : DEF ID LPAREN ARGS RPAREN EQ E SEMI F
-          | DEF ID LPAREN ARGS RPAREN EQ E SEMI
-    '''
+    print(p.slice)    
     p[0] = p[7]
+
 def p_ARGS(p):
     ''' ARGS : ID COL ARGS
              | ID
     '''
+    print(p.slice)    
+    if len(p) == 4:
+        p[0] = (p[1], p[3])
+    else:
+        p[0] = p[1]
 
 def p_SEQ(p):
     ''' SEQ : E COL SEQ
             | E
     '''
+    print(p.slice)    
+    if len(p) == 4:
+        p[0] = (p[1], p[3])
+    else:
+        p[0] = p[1]
 
 def p_E(p):
     ''' E : INTEGER
@@ -95,12 +115,17 @@ def p_E(p):
           | ARIT_EXP
           | ID LPAREN SEQ RPAREN
     '''
-    p[0] = p[1]
+    print(p.slice)    
+    if len(p) == 5:
+        p[0] = (p[1], p[3])
+    else:
+        p[0] = p[1]
 
 def p_ARIT_EXP(p):
     ''' ARIT_EXP : ARIT_EXP OP_ADD TERM
                  | TERM
     '''
+    print(p.slice)    
     if len(p) == 4:
         p[0] = (p[1], p[2], p[3])
     else:
@@ -110,6 +135,7 @@ def p_TERM(p):
     ''' TERM : TERM OP_MULT FACTOR
              | FACTOR
     '''
+    print(p.slice)    
     if len(p) == 4:
         p[0] = (p[1], p[2], p[3])
     else:
@@ -119,15 +145,14 @@ def p_FACTOR(p):
     ''' FACTOR : PAREN
                | E
     '''
+    print(p.slice)    
     p[0] = p[1]
 
 def p_PAREN(p):
     ''' PAREN : LPAREN E RPAREN
     '''
+    print(p.slice)    
     p[0] = p[2]
-
-# def p_COND_EXP(p):
-#     ''' COND_EXP : 
 
 def p_error(p):
     print("Syntax error at token '%s' of type '%s' at position '%s'" % (p.value, p.type, p.lexpos))
@@ -137,14 +162,22 @@ start = 'P'
 parser = yacc.yacc(debug=1)
 
 ## Test it
-s = '''a = 1;
-       def inc(a) =
-         a *(2 + 1);'''
-lexer.input(s)
-while True:
-    token = lexer.token()
-    if not token:
-        break
-    print(token)
+s = ''' a = 312;
+        b = 111;
+        def mdc(a,b) =
+            if mod(a,b) == 0
+            then b
+            else mdc(b,mod(a,b));
+        def mod(a,b) =
+            if a < b
+            then a
+            else mod(a-b,b);
+    '''
+# lexer.input(s)
+# while True:
+#     token = lexer.token()
+#     if not token:
+#         break
+#     print(token)
 
 print(parser.parse(s))
