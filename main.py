@@ -52,6 +52,10 @@ t_DEF = r'def'
 
 t_ignore = '[ \n\t\r\f]'
 
+def t_error(t):
+    print("Illegal character '%s' at line' %s'" % (t.value[0] , t.lexer.lineno ))
+    t.lexer.skip(1)
+
 lexer = lex.lex(debug=1)
 
 ## Parser part
