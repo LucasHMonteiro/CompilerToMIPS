@@ -18,7 +18,8 @@ tokens = tuple(tokens) +\
          'INTEGER',
          'ID',
          'OP_REL',
-         'OP_ARIT',
+         'OP_ADD',
+         'OP_MULT',
          'COMMENT',
          'EQ',
          'SEMI',
@@ -37,9 +38,10 @@ def t_ID(t):
    t.type = RESERVED.get(t.value, "ID")
    return t
 
-t_EQ = r'}'
-t_OP_REL = r'[>|<|=]'
-t_OP_ARIT = r'[+\-*/]'
+t_EQ = r'='
+t_OP_REL = r'[>|<]|=='
+t_OP_ADD = r'[\+\-]'
+t_OP_MULT = r'[\*\/]'
 t_COMMENT = r'//[^\n]*|/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -62,7 +64,9 @@ lexer = lex.lex(debug=1)
 
 def p_P(p):
     ''' P : D F
+          | F
     '''
+    p[0] = p[2]
 
 def p_D(p):
     ''' D : ID EQ INTEGER SEMI D
@@ -73,7 +77,7 @@ def p_F(p):
     ''' F : DEF ID LPAREN ARGS RPAREN EQ E SEMI F
           | DEF ID LPAREN ARGS RPAREN EQ E SEMI
     '''
-
+    p[0] = p[7]
 def p_ARGS(p):
     ''' ARGS : ID COL ARGS
              | ID
@@ -88,21 +92,59 @@ def p_E(p):
     ''' E : INTEGER
           | ID
           | IF E OP_REL E THEN E ELSE E
-          | E OP_ARIT E
+          | ARIT_EXP
           | ID LPAREN SEQ RPAREN
     '''
+    p[0] = p[1]
+
+def p_ARIT_EXP(p):
+    ''' ARIT_EXP : ARIT_EXP OP_ADD TERM
+                 | TERM
+    '''
+    if len(p) == 4:
+        p[0] = (p[1], p[2], p[3])
+    else:
+        p[0] = p[1]
+
+def p_TERM(p):
+    ''' TERM : TERM OP_MULT FACTOR
+             | FACTOR
+    '''
+    if len(p) == 4:
+        p[0] = (p[1], p[2], p[3])
+    else:
+        p[0] = p[1]
+
+def p_FACTOR(p):
+    ''' FACTOR : PAREN
+               | E
+    '''
+    p[0] = p[1]
+
+def p_PAREN(p):
+    ''' PAREN : LPAREN E RPAREN
+    '''
+    p[0] = p[2]
+
+# def p_COND_EXP(p):
+#     ''' COND_EXP : 
+
+def p_error(p):
+    print("Syntax error at token '%s' of type '%s' at position '%s'" % (p.value, p.type, p.lexpos))
 
 start = 'P'
 
 parser = yacc.yacc(debug=1)
 
 ## Test it
-s = '''a } 312;
-       b } 111;
-       def mdc(a,b) }
-          if mod(a,b) = 0 then b
-          else mdc(b,mod(a,b));
-       def mod(a,b) }
-          if a < b then a
-          else mod(a-b,b);'''
+s = '''a = 1;
+       def inc(a) =
+         a *(2 + 1);'''
+lexer.input(s)
+while True:
+    token = lexer.token()
+    if not token:
+        break
+    print(token)
+
 print(parser.parse(s))
