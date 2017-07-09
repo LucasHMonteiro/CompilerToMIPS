@@ -10,7 +10,7 @@ class CGen:
     def add(self, p):
         return self.integer(p[1]) +\
                '\nsw $a0 0($sp)' +\
-               '\naddiu $sp $sp - 4' +\
+               '\naddiu $sp $sp -4' +\
                 self.integer(p[3]) +\
                 '\nlw $t1 4($sp)' +\
                 '\nadd $a0 $t1 $a0' +\
