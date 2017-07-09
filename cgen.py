@@ -19,7 +19,7 @@ class CGen:
     def f_call(self, p):
         string_builder = ""
         for i in p[::-1]:
-            arg = str(self.integer(p[i]))
+            arg = str(self.integer(p[int(i)]))
             string_builder+='\n'+arg
             string_builder+='\nsw $a0 0($sp)'
             string_builder+= '\naddiu $sp $sp -4'
