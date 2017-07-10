@@ -27,3 +27,14 @@ class CGen:
                '\naddiu $sp $sp -4' +\
                string_builder +\
                '\njal f_entry'
+
+    def f_def(self, p, number_params):
+        return 'f_entry:' +\
+           '\nmove $fp $sp' +\
+           '\nsw $ra 0($sp)' +\
+           '\naddiu $sp $sp -4' +\
+           str(p[1]) +\
+           '\nlw $ra 4($sp)' +\
+           '\naddiu $sp $sp ' + str(4*number_params+8) +\
+           '\nlw $fp 0($sp)' +\
+           '\njr $ra'
