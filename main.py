@@ -1,6 +1,15 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import itertools
+from cgen import CGen
+
+cgen = CGen()
+
+def cat_list(init_list, list_end):
+    if type(list_end) == type([]):
+        return init_list + list_end
+    else:
+        init_list.append(list_end)
 
 func_hash = {
     '>': lambda x, y: x > y,
@@ -16,6 +25,7 @@ symbol_table = {}
 first_pass = True
 var_list = []
 args_list = []
+args_hash = {}
 ## Lexer part
 tokens = []
 
@@ -108,12 +118,18 @@ def p_D(p):
                 msg += 'Variable '+id+' not declared\n'
             raise Exception(msg)
         var_list = []
+
+    
     
 def p_ARGS(p):
     ''' ARGS : ID COL ARGS
              | ID
     '''
+    global args_hash
     if len(p) > 2:
+        first = {p[1]: len(p[3])+1}
+        first.update(args_hash)
+        args_hash.update(first)
         p[0] = [p[1]]
         p[0].append(p[3])
         p[0] = list(itertools.chain(*p[0]))
@@ -122,6 +138,8 @@ def p_ARGS(p):
         global args_list
         args_list = p[0]
     else:
+        global args_hash
+        args_hash = {p[1]: 1}
         p[0] = p[1]
 
 def p_SEQ(p):
@@ -129,9 +147,10 @@ def p_SEQ(p):
             | E
     '''
     if len(p) > 2:
-        p[0] = 1 + p[3]
+        p[0] = [p[1]]
+        cat_list(p[0], p[3])
     else:
-        p[0] = 1
+        p[0] = p[1]
 
 def p_E(p):
     ''' E : INTEGER
@@ -150,18 +169,27 @@ def p_E(p):
         if p[1] not in symbol_table:
             raise Exception('Function not declared')
         else:
-            if not p[3] == len(symbol_table[p[1]]):
+            if not len(p[3]) == len(symbol_table[p[1]]):
                 raise Exception("Wrong number of parameters expected: %d, given: %s" % (len(symbol_table[p[1]]), p[3]))
+
+    global args_hash
+    if not p.slice[1].type == 'ARIT_EXP':
+        print(cgen.e(p, args_hash))
+    args_hash = {}
 
 def p_ARIT_EXP(p):
     ''' ARIT_EXP : ARIT_EXP OP_ADD TERM
                  | TERM
     '''
+    if len(p) > 2:
+        cgen.arit(p)
 
 def p_TERM(p):
     ''' TERM : TERM OP_MULT FACTOR
              | FACTOR
     '''
+    if len(p) > 2:
+        cgen.term(p)
 
 def p_FACTOR(p):
     ''' FACTOR : PAREN
@@ -171,6 +199,7 @@ def p_FACTOR(p):
 def p_PAREN(p):
     ''' PAREN : LPAREN E RPAREN
     '''
+    cgen.paren(p)
 
 def p_error(p):
     print("Syntax error at token '%s' of type '%s' at position '%s'" % (p.value, p.type, p.lexpos))
@@ -180,17 +209,10 @@ start = 'P'
 parser = yacc.yacc(debug=1)
 
 ## Test it
-s = ''' a = 312;
-        b = 111;
-        def mdc(a,b) =
-            if mod(a,b) == 0
-            then b
-            else mdc(b,mod(a,b));
-        def mod(a,b) =
-            if a < b
-            then a
-            else mod(a-b,b);
-        def fuck(a) = a;
+s = ''' a = 1;
+        b = 2;
+        def sum(a,b) =
+            a + b;
     '''
 # lexer.input(s)
 # while True:
