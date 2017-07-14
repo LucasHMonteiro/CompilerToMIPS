@@ -1,0 +1,858 @@
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMENT
+
+Grammar
+
+Rule 0     S' -> P
+Rule 1     P -> ID EQ INTEGER SEMI P
+Rule 2     P -> I
+Rule 3     I -> D I
+Rule 4     I -> D
+Rule 5     D -> DEF ID LPAREN ARGS RPAREN EQ E SEMI
+Rule 6     ARGS -> ID COL ARGS
+Rule 7     ARGS -> ID
+Rule 8     SEQ -> E COL SEQ
+Rule 9     SEQ -> E
+Rule 10    E -> INTEGER
+Rule 11    E -> ID
+Rule 12    E -> IF E OP_REL E THEN E ELSE E
+Rule 13    E -> ARIT_EXP
+Rule 14    E -> ID LPAREN SEQ RPAREN
+Rule 15    ARIT_EXP -> ARIT_EXP OP_ADD TERM
+Rule 16    ARIT_EXP -> TERM
+Rule 17    TERM -> TERM OP_MULT FACTOR
+Rule 18    TERM -> FACTOR
+Rule 19    FACTOR -> PAREN
+Rule 20    FACTOR -> E
+Rule 21    PAREN -> LPAREN E RPAREN
+
+Terminals, with rules where they appear
+
+COL                  : 6 8
+COMMENT              : 
+DEF                  : 5
+ELSE                 : 12
+EQ                   : 1 5
+ID                   : 1 5 6 7 11 14
+IF                   : 12
+INTEGER              : 1 10
+LPAREN               : 5 14 21
+OP_ADD               : 15
+OP_MULT              : 17
+OP_REL               : 12
+RPAREN               : 5 14 21
+SEMI                 : 1 5
+THEN                 : 12
+error                : 
+
+Nonterminals, with rules where they appear
+
+ARGS                 : 5 6
+ARIT_EXP             : 13 15
+D                    : 3 4
+E                    : 5 8 9 12 12 12 12 20 21
+FACTOR               : 17 18
+I                    : 2 3
+P                    : 1 0
+PAREN                : 19
+SEQ                  : 8 14
+TERM                 : 15 16 17
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . P
+    (1) P -> . ID EQ INTEGER SEMI P
+    (2) P -> . I
+    (3) I -> . D I
+    (4) I -> . D
+    (5) D -> . DEF ID LPAREN ARGS RPAREN EQ E SEMI
+
+    ID              shift and go to state 3
+    DEF             shift and go to state 2
+
+    I                              shift and go to state 1
+    D                              shift and go to state 5
+    P                              shift and go to state 4
+
+state 1
+
+    (2) P -> I .
+
+    $end            reduce using rule 2 (P -> I .)
+
+
+state 2
+
+    (5) D -> DEF . ID LPAREN ARGS RPAREN EQ E SEMI
+
+    ID              shift and go to state 6
+
+
+state 3
+
+    (1) P -> ID . EQ INTEGER SEMI P
+
+    EQ              shift and go to state 7
+
+
+state 4
+
+    (0) S' -> P .
+
+
+
+state 5
+
+    (3) I -> D . I
+    (4) I -> D .
+    (3) I -> . D I
+    (4) I -> . D
+    (5) D -> . DEF ID LPAREN ARGS RPAREN EQ E SEMI
+
+    $end            reduce using rule 4 (I -> D .)
+    DEF             shift and go to state 2
+
+    D                              shift and go to state 5
+    I                              shift and go to state 8
+
+state 6
+
+    (5) D -> DEF ID . LPAREN ARGS RPAREN EQ E SEMI
+
+    LPAREN          shift and go to state 9
+
+
+state 7
+
+    (1) P -> ID EQ . INTEGER SEMI P
+
+    INTEGER         shift and go to state 10
+
+
+state 8
+
+    (3) I -> D I .
+
+    $end            reduce using rule 3 (I -> D I .)
+
+
+state 9
+
+    (5) D -> DEF ID LPAREN . ARGS RPAREN EQ E SEMI
+    (6) ARGS -> . ID COL ARGS
+    (7) ARGS -> . ID
+
+    ID              shift and go to state 12
+
+    ARGS                           shift and go to state 11
+
+state 10
+
+    (1) P -> ID EQ INTEGER . SEMI P
+
+    SEMI            shift and go to state 13
+
+
+state 11
+
+    (5) D -> DEF ID LPAREN ARGS . RPAREN EQ E SEMI
+
+    RPAREN          shift and go to state 14
+
+
+state 12
+
+    (6) ARGS -> ID . COL ARGS
+    (7) ARGS -> ID .
+
+    COL             shift and go to state 15
+    RPAREN          reduce using rule 7 (ARGS -> ID .)
+
+
+state 13
+
+    (1) P -> ID EQ INTEGER SEMI . P
+    (1) P -> . ID EQ INTEGER SEMI P
+    (2) P -> . I
+    (3) I -> . D I
+    (4) I -> . D
+    (5) D -> . DEF ID LPAREN ARGS RPAREN EQ E SEMI
+
+    ID              shift and go to state 3
+    DEF             shift and go to state 2
+
+    I                              shift and go to state 1
+    D                              shift and go to state 5
+    P                              shift and go to state 16
+
+state 14
+
+    (5) D -> DEF ID LPAREN ARGS RPAREN . EQ E SEMI
+
+    EQ              shift and go to state 17
+
+
+state 15
+
+    (6) ARGS -> ID COL . ARGS
+    (6) ARGS -> . ID COL ARGS
+    (7) ARGS -> . ID
+
+    ID              shift and go to state 12
+
+    ARGS                           shift and go to state 18
+
+state 16
+
+    (1) P -> ID EQ INTEGER SEMI P .
+
+    $end            reduce using rule 1 (P -> ID EQ INTEGER SEMI P .)
+
+
+state 17
+
+    (5) D -> DEF ID LPAREN ARGS RPAREN EQ . E SEMI
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    TERM                           shift and go to state 25
+    E                              shift and go to state 26
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 18
+
+    (6) ARGS -> ID COL ARGS .
+
+    RPAREN          reduce using rule 6 (ARGS -> ID COL ARGS .)
+
+
+state 19
+
+    (19) FACTOR -> PAREN .
+
+    SEMI            reduce using rule 19 (FACTOR -> PAREN .)
+    OP_MULT         reduce using rule 19 (FACTOR -> PAREN .)
+    OP_ADD          reduce using rule 19 (FACTOR -> PAREN .)
+    RPAREN          reduce using rule 19 (FACTOR -> PAREN .)
+    OP_REL          reduce using rule 19 (FACTOR -> PAREN .)
+    COL             reduce using rule 19 (FACTOR -> PAREN .)
+    THEN            reduce using rule 19 (FACTOR -> PAREN .)
+    ELSE            reduce using rule 19 (FACTOR -> PAREN .)
+
+
+state 20
+
+    (18) TERM -> FACTOR .
+
+    OP_ADD          reduce using rule 18 (TERM -> FACTOR .)
+    ELSE            reduce using rule 18 (TERM -> FACTOR .)
+    OP_MULT         reduce using rule 18 (TERM -> FACTOR .)
+    COL             reduce using rule 18 (TERM -> FACTOR .)
+    RPAREN          reduce using rule 18 (TERM -> FACTOR .)
+    THEN            reduce using rule 18 (TERM -> FACTOR .)
+    OP_REL          reduce using rule 18 (TERM -> FACTOR .)
+    SEMI            reduce using rule 18 (TERM -> FACTOR .)
+
+
+state 21
+
+    (21) PAREN -> LPAREN . E RPAREN
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    TERM                           shift and go to state 25
+    E                              shift and go to state 28
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 22
+
+    (10) E -> INTEGER .
+
+    COL             reduce using rule 10 (E -> INTEGER .)
+    RPAREN          reduce using rule 10 (E -> INTEGER .)
+    OP_MULT         reduce using rule 10 (E -> INTEGER .)
+    OP_ADD          reduce using rule 10 (E -> INTEGER .)
+    SEMI            reduce using rule 10 (E -> INTEGER .)
+    OP_REL          reduce using rule 10 (E -> INTEGER .)
+    THEN            reduce using rule 10 (E -> INTEGER .)
+    ELSE            reduce using rule 10 (E -> INTEGER .)
+
+
+state 23
+
+    (12) E -> IF . E OP_REL E THEN E ELSE E
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    TERM                           shift and go to state 25
+    E                              shift and go to state 29
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 24
+
+    (11) E -> ID .
+    (14) E -> ID . LPAREN SEQ RPAREN
+
+    COL             reduce using rule 11 (E -> ID .)
+    RPAREN          reduce using rule 11 (E -> ID .)
+    OP_MULT         reduce using rule 11 (E -> ID .)
+    OP_ADD          reduce using rule 11 (E -> ID .)
+    SEMI            reduce using rule 11 (E -> ID .)
+    OP_REL          reduce using rule 11 (E -> ID .)
+    THEN            reduce using rule 11 (E -> ID .)
+    ELSE            reduce using rule 11 (E -> ID .)
+    LPAREN          shift and go to state 30
+
+
+state 25
+
+    (16) ARIT_EXP -> TERM .
+    (17) TERM -> TERM . OP_MULT FACTOR
+
+  ! shift/reduce conflict for OP_MULT resolved as shift
+    COL             reduce using rule 16 (ARIT_EXP -> TERM .)
+    RPAREN          reduce using rule 16 (ARIT_EXP -> TERM .)
+    OP_ADD          reduce using rule 16 (ARIT_EXP -> TERM .)
+    SEMI            reduce using rule 16 (ARIT_EXP -> TERM .)
+    OP_REL          reduce using rule 16 (ARIT_EXP -> TERM .)
+    THEN            reduce using rule 16 (ARIT_EXP -> TERM .)
+    ELSE            reduce using rule 16 (ARIT_EXP -> TERM .)
+    OP_MULT         shift and go to state 31
+
+  ! OP_MULT         [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+
+
+state 26
+
+    (5) D -> DEF ID LPAREN ARGS RPAREN EQ E . SEMI
+    (20) FACTOR -> E .
+
+  ! shift/reduce conflict for SEMI resolved as shift
+    SEMI            shift and go to state 32
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+
+  ! SEMI            [ reduce using rule 20 (FACTOR -> E .) ]
+
+
+state 27
+
+    (13) E -> ARIT_EXP .
+    (15) ARIT_EXP -> ARIT_EXP . OP_ADD TERM
+
+  ! shift/reduce conflict for OP_ADD resolved as shift
+    COL             reduce using rule 13 (E -> ARIT_EXP .)
+    RPAREN          reduce using rule 13 (E -> ARIT_EXP .)
+    OP_MULT         reduce using rule 13 (E -> ARIT_EXP .)
+    SEMI            reduce using rule 13 (E -> ARIT_EXP .)
+    OP_REL          reduce using rule 13 (E -> ARIT_EXP .)
+    THEN            reduce using rule 13 (E -> ARIT_EXP .)
+    ELSE            reduce using rule 13 (E -> ARIT_EXP .)
+    OP_ADD          shift and go to state 33
+
+  ! OP_ADD          [ reduce using rule 13 (E -> ARIT_EXP .) ]
+
+
+state 28
+
+    (21) PAREN -> LPAREN E . RPAREN
+    (20) FACTOR -> E .
+
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 34
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+
+  ! RPAREN          [ reduce using rule 20 (FACTOR -> E .) ]
+
+
+state 29
+
+    (12) E -> IF E . OP_REL E THEN E ELSE E
+    (20) FACTOR -> E .
+
+  ! shift/reduce conflict for OP_REL resolved as shift
+    OP_REL          shift and go to state 35
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+
+  ! OP_REL          [ reduce using rule 20 (FACTOR -> E .) ]
+
+
+state 30
+
+    (14) E -> ID LPAREN . SEQ RPAREN
+    (8) SEQ -> . E COL SEQ
+    (9) SEQ -> . E
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    SEQ                            shift and go to state 36
+    TERM                           shift and go to state 25
+    E                              shift and go to state 37
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 31
+
+    (17) TERM -> TERM OP_MULT . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+
+    LPAREN          shift and go to state 21
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+
+    FACTOR                         shift and go to state 38
+    E                              shift and go to state 39
+    TERM                           shift and go to state 25
+    ARIT_EXP                       shift and go to state 27
+    PAREN                          shift and go to state 19
+
+state 32
+
+    (5) D -> DEF ID LPAREN ARGS RPAREN EQ E SEMI .
+
+    DEF             reduce using rule 5 (D -> DEF ID LPAREN ARGS RPAREN EQ E SEMI .)
+    $end            reduce using rule 5 (D -> DEF ID LPAREN ARGS RPAREN EQ E SEMI .)
+
+
+state 33
+
+    (15) ARIT_EXP -> ARIT_EXP OP_ADD . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+
+    LPAREN          shift and go to state 21
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+
+    TERM                           shift and go to state 40
+    E                              shift and go to state 39
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 34
+
+    (21) PAREN -> LPAREN E RPAREN .
+
+    SEMI            reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    OP_MULT         reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    OP_ADD          reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    COL             reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    RPAREN          reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    OP_REL          reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    THEN            reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+    ELSE            reduce using rule 21 (PAREN -> LPAREN E RPAREN .)
+
+
+state 35
+
+    (12) E -> IF E OP_REL . E THEN E ELSE E
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    TERM                           shift and go to state 25
+    E                              shift and go to state 41
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 36
+
+    (14) E -> ID LPAREN SEQ . RPAREN
+
+    RPAREN          shift and go to state 42
+
+
+state 37
+
+    (8) SEQ -> E . COL SEQ
+    (9) SEQ -> E .
+    (20) FACTOR -> E .
+
+  ! shift/reduce conflict for COL resolved as shift
+  ! reduce/reduce conflict for RPAREN resolved using rule 9 (SEQ -> E .)
+    COL             shift and go to state 43
+    RPAREN          reduce using rule 9 (SEQ -> E .)
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+
+  ! COL             [ reduce using rule 20 (FACTOR -> E .) ]
+  ! RPAREN          [ reduce using rule 20 (FACTOR -> E .) ]
+
+
+state 38
+
+    (17) TERM -> TERM OP_MULT FACTOR .
+    (18) TERM -> FACTOR .
+
+  ! reduce/reduce conflict for SEMI resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for OP_MULT resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for OP_ADD resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for OP_REL resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for COL resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for THEN resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+  ! reduce/reduce conflict for ELSE resolved using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    OP_ADD          reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    ELSE            reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    OP_MULT         reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    COL             reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    RPAREN          reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    THEN            reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    OP_REL          reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+    SEMI            reduce using rule 17 (TERM -> TERM OP_MULT FACTOR .)
+
+  ! SEMI            [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! OP_MULT         [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! OP_ADD          [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! RPAREN          [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! OP_REL          [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! COL             [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! THEN            [ reduce using rule 18 (TERM -> FACTOR .) ]
+  ! ELSE            [ reduce using rule 18 (TERM -> FACTOR .) ]
+
+
+state 39
+
+    (20) FACTOR -> E .
+
+    SEMI            reduce using rule 20 (FACTOR -> E .)
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+    RPAREN          reduce using rule 20 (FACTOR -> E .)
+    OP_REL          reduce using rule 20 (FACTOR -> E .)
+    COL             reduce using rule 20 (FACTOR -> E .)
+    THEN            reduce using rule 20 (FACTOR -> E .)
+    ELSE            reduce using rule 20 (FACTOR -> E .)
+
+
+state 40
+
+    (15) ARIT_EXP -> ARIT_EXP OP_ADD TERM .
+    (17) TERM -> TERM . OP_MULT FACTOR
+    (16) ARIT_EXP -> TERM .
+
+  ! shift/reduce conflict for OP_MULT resolved as shift
+  ! reduce/reduce conflict for SEMI resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+  ! shift/reduce conflict for OP_MULT resolved as shift
+  ! reduce/reduce conflict for OP_ADD resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+  ! reduce/reduce conflict for OP_REL resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+  ! reduce/reduce conflict for COL resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+  ! reduce/reduce conflict for THEN resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+  ! reduce/reduce conflict for ELSE resolved using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    SEMI            reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    OP_ADD          reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    RPAREN          reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    OP_REL          reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    COL             reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    THEN            reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    ELSE            reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .)
+    OP_MULT         shift and go to state 31
+
+  ! OP_MULT         [ reduce using rule 15 (ARIT_EXP -> ARIT_EXP OP_ADD TERM .) ]
+  ! SEMI            [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! OP_MULT         [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! OP_ADD          [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! RPAREN          [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! OP_REL          [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! COL             [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! THEN            [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+  ! ELSE            [ reduce using rule 16 (ARIT_EXP -> TERM .) ]
+
+
+state 41
+
+    (12) E -> IF E OP_REL E . THEN E ELSE E
+    (20) FACTOR -> E .
+
+  ! shift/reduce conflict for THEN resolved as shift
+    THEN            shift and go to state 44
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+
+  ! THEN            [ reduce using rule 20 (FACTOR -> E .) ]
+
+
+state 42
+
+    (14) E -> ID LPAREN SEQ RPAREN .
+
+    COL             reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    RPAREN          reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    OP_MULT         reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    OP_ADD          reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    SEMI            reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    OP_REL          reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    THEN            reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+    ELSE            reduce using rule 14 (E -> ID LPAREN SEQ RPAREN .)
+
+
+state 43
+
+    (8) SEQ -> E COL . SEQ
+    (8) SEQ -> . E COL SEQ
+    (9) SEQ -> . E
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    SEQ                            shift and go to state 45
+    TERM                           shift and go to state 25
+    E                              shift and go to state 37
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 44
+
+    (12) E -> IF E OP_REL E THEN . E ELSE E
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    TERM                           shift and go to state 25
+    E                              shift and go to state 46
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 45
+
+    (8) SEQ -> E COL SEQ .
+
+    RPAREN          reduce using rule 8 (SEQ -> E COL SEQ .)
+
+
+state 46
+
+    (12) E -> IF E OP_REL E THEN E . ELSE E
+    (20) FACTOR -> E .
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    ELSE            shift and go to state 47
+    OP_ADD          reduce using rule 20 (FACTOR -> E .)
+    OP_MULT         reduce using rule 20 (FACTOR -> E .)
+
+  ! ELSE            [ reduce using rule 20 (FACTOR -> E .) ]
+
+
+state 47
+
+    (12) E -> IF E OP_REL E THEN E ELSE . E
+    (10) E -> . INTEGER
+    (11) E -> . ID
+    (12) E -> . IF E OP_REL E THEN E ELSE E
+    (13) E -> . ARIT_EXP
+    (14) E -> . ID LPAREN SEQ RPAREN
+    (15) ARIT_EXP -> . ARIT_EXP OP_ADD TERM
+    (16) ARIT_EXP -> . TERM
+    (17) TERM -> . TERM OP_MULT FACTOR
+    (18) TERM -> . FACTOR
+    (19) FACTOR -> . PAREN
+    (20) FACTOR -> . E
+    (21) PAREN -> . LPAREN E RPAREN
+
+    INTEGER         shift and go to state 22
+    ID              shift and go to state 24
+    IF              shift and go to state 23
+    LPAREN          shift and go to state 21
+
+    TERM                           shift and go to state 25
+    E                              shift and go to state 48
+    ARIT_EXP                       shift and go to state 27
+    FACTOR                         shift and go to state 20
+    PAREN                          shift and go to state 19
+
+state 48
+
+    (12) E -> IF E OP_REL E THEN E ELSE E .
+    (20) FACTOR -> E .
+
+  ! reduce/reduce conflict for SEMI resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for OP_MULT resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for OP_ADD resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for RPAREN resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for OP_REL resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for COL resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for THEN resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+  ! reduce/reduce conflict for ELSE resolved using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    COL             reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    RPAREN          reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    OP_MULT         reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    OP_ADD          reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    SEMI            reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    OP_REL          reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    THEN            reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+    ELSE            reduce using rule 12 (E -> IF E OP_REL E THEN E ELSE E .)
+
+  ! SEMI            [ reduce using rule 20 (FACTOR -> E .) ]
+  ! OP_MULT         [ reduce using rule 20 (FACTOR -> E .) ]
+  ! OP_ADD          [ reduce using rule 20 (FACTOR -> E .) ]
+  ! RPAREN          [ reduce using rule 20 (FACTOR -> E .) ]
+  ! OP_REL          [ reduce using rule 20 (FACTOR -> E .) ]
+  ! COL             [ reduce using rule 20 (FACTOR -> E .) ]
+  ! THEN            [ reduce using rule 20 (FACTOR -> E .) ]
+  ! ELSE            [ reduce using rule 20 (FACTOR -> E .) ]
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for OP_MULT in state 25 resolved as shift
+WARNING: shift/reduce conflict for SEMI in state 26 resolved as shift
+WARNING: shift/reduce conflict for OP_ADD in state 27 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 28 resolved as shift
+WARNING: shift/reduce conflict for OP_REL in state 29 resolved as shift
+WARNING: shift/reduce conflict for COL in state 37 resolved as shift
+WARNING: shift/reduce conflict for OP_MULT in state 40 resolved as shift
+WARNING: shift/reduce conflict for OP_MULT in state 40 resolved as shift
+WARNING: shift/reduce conflict for THEN in state 41 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 46 resolved as shift
+WARNING: reduce/reduce conflict in state 37 resolved using rule (SEQ -> E)
+WARNING: rejected rule (FACTOR -> E) in state 37
+WARNING: reduce/reduce conflict in state 38 resolved using rule (TERM -> TERM OP_MULT FACTOR)
+WARNING: rejected rule (TERM -> FACTOR) in state 38
+WARNING: reduce/reduce conflict in state 40 resolved using rule (ARIT_EXP -> ARIT_EXP OP_ADD TERM)
+WARNING: rejected rule (ARIT_EXP -> TERM) in state 40
+WARNING: reduce/reduce conflict in state 48 resolved using rule (E -> IF E OP_REL E THEN E ELSE E)
+WARNING: rejected rule (FACTOR -> E) in state 48

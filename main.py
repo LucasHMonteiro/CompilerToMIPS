@@ -3,7 +3,6 @@ import ply.yacc as yacc
 import itertools
 from cgen import CGen
 
-cgen = CGen()
 
 
 def cat_list(init_list, list_end):
@@ -11,6 +10,7 @@ def cat_list(init_list, list_end):
         return init_list + list_end
     else:
         init_list.append(list_end)
+        return init_list
 
 
 func_hash = {
@@ -29,6 +29,7 @@ first_pass = True
 var_list = []
 args_list = []
 args_hash = {}
+func_arr = []
 ## Lexer part
 tokens = []
 
@@ -103,8 +104,9 @@ def p_P(p):
         global var_list
         if not p[1] in var_list:
             var_list.append(p[1])
-        if not set(var_list) == set(args_list) and p.slice[1].lexpos == 1:
+        if not set(var_list) == set(symbol_table[func_arr[0]]) and p.slice[1].lexpos == 1:
             raise Exception('Arguments in the first function not declared')
+        global args_list
     if(len(p) > 2):
       if first_pass:
          p[0] =  ('CGEN_ASSIGN',p[1], p[3])
@@ -118,20 +120,21 @@ def p_I(p):
 def p_D(p):
     ''' D : DEF ID LPAREN ARGS RPAREN EQ E SEMI
     '''
+    func_arr.append(p[2])
     if first_pass:
         if p[2] in symbol_table:
             raise Exception('Function name already used')
         symbol_table[p[2]] = p[4]
     else:
         global var_list
-        if not set(p[4]) == set(var_list):
+        if not set(p[4]) == set(var_list) and len(set(var_list) - set(p[4])) != 0:
             msg = ''
             for id in set(var_list) - set(p[4]):
                 msg += 'Variable ' + id + ' not declared\n'
             raise Exception(msg)
-        p[0] = ('CGEN_DEF', p[2], len(var_list), p[7])
+        p[0] = ('CGEN_DEF', p[2], var_list, p[7])
         tree.append(p[0])
-        #var_list = []
+        var_list = []
 
 
 
@@ -155,17 +158,19 @@ def p_ARGS(p):
         global args_hash
         args_hash = {p[1]: 1}
         p[0] = p[1]
+        args_list = [p[1]]
 
 
 def p_SEQ(p):
     ''' SEQ : E COL SEQ
             | E
     '''
+
     if len(p) > 2:
         p[0] = [p[1]]
-        cat_list(p[0], p[3])
+        p[0] = cat_list(p[0], p[3])
     else:
-        p[0] = p[1]
+        p[0] = [p[1]]
 
 
 def p_E(p):
@@ -192,7 +197,7 @@ def p_E(p):
             raise Exception('Function not declared')
         else:
             if not len(p[3]) == len(symbol_table[p[1]]):
-                raise Exception("Wrong number of parameters expected: %d, given: %s" % (len(symbol_table[p[1]]), p[3]))
+                raise Exception("%s: Wrong number of parameters expected: %d, given: %d" % (p[1],len(symbol_table[p[1]]), len(p[3])))
         p[0] = ('CGEN_CALL', p[1], p[3])
 
     if len(p) == 9:
@@ -243,13 +248,11 @@ start = 'P'
 parser = yacc.yacc(debug=1)
 
 ## Test it
-s = ''' a = 1;
-        b = 2;
-        def sum(a,b) =
-            a;
-        def sub(a,b) = sum(if a == 2 then 4 else 5,b);
-    '''
+file = open('font.gdk', 'r')
+s = file.read()
 parser.parse(s)
 first_pass = False
 parser.parse(s)
+cgen = CGen(tree, symbol_table)
 print(tree)
+cgen.gen()
